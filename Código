@@ -1,0 +1,48 @@
+Web VPython 3.2
+from vpython import sphere, color, vector, rate, local_light, scene
+
+scene.lights[0].visible = False
+
+sun = sphere(color=color.yellow, pos=vector(0, 0, 0), radius=0.3, opacity=1.0, shininess=0, emissive=True)
+
+# As distâncias foram ajustadas para fins de visualização
+planets = {
+    'mercury': sphere(color=color.gray(0.5), pos=vector(0.4, 0, 0), radius=0.01, make_trail=True),
+    'venus': sphere(color=color.yellow, pos=vector(0.7, 0, 0), radius=0.02, make_trail=True),
+    'earth': sphere(color=color.blue, pos=vector(1, 0, 0), radius=0.03, make_trail=True),
+    'mars': sphere(color=color.red, pos=vector(1.5, 0, 0), radius=0.015, make_trail=True),
+    'jupiter': sphere(color=color.orange, pos=vector(2.5, 0, 0), radius=0.15, make_trail=True),
+    'saturn': sphere(color=color.yellow, pos=vector(3.5, 0, 0), radius=0.12, make_trail=True),
+    'uranus': sphere(color=color.cyan, pos=vector(4.5, 0, 0), radius=0.06, make_trail=True),
+    'neptune': sphere(color=color.blue, pos=vector(5.5, 0, 0), radius=0.06, make_trail=True),
+    'pluto': sphere(color=color.white, pos=vector(6, 0, 0), radius=0.005, make_trail=True)  # Pluto é um planeta anão
+}
+
+moon = sphere(color=color.white, pos=vector(1.03, 0, 0), radius=0.008, make_trail=False)
+
+lamp = local_light(pos=vector(0, 0, 0), color=color.white)
+sunlight = local_light(pos=vector(0, 0, 0), color=color.white)
+more_sunlight = local_light(pos=vector(0, 0, 0), color=color.white)
+
+framerate = 100
+
+# As velocidades foram ajustadas para refletir as velocidades orbitais reais (em uma escala muito reduzida para fins de visualização)
+velocities = {
+    'mercury': 2 * 3.14159 / 88,
+    'venus': 2 * 3.14159 / 225,
+    'earth': 2 * 3.14159 / 365,
+    'mars': 2 * 3.14159 / 687,
+    'jupiter': 2 * 3.14159 / (11.86 * 365),
+    'saturn': 2 * 3.14159 / (29.46 * 365),
+    'uranus': 2 * 3.14159 / (84.01 * 365),
+    'neptune': 2 * 3.14159 / (164.8 * 365),
+    'pluto': 2 * 3.14159 / (248.09 * 365)
+}
+
+moonOmega = 2 * 3.14159 / 28
+
+while True:
+    rate(framerate)
+    for planet_name, planet in planets.items():
+        planet.rotate(angle=velocities[planet_name], axis=vector(0, 1, 0), origin=vector(0, 0, 0))
+    moon.rotate(angle=moonOmega, axis=vector(0, 1, 0), origin=planets['earth'].pos)
